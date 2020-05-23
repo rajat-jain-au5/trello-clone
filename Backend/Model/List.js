@@ -1,28 +1,33 @@
-var mongoose = require('mongoose')
-var Schema = mongoose.Schema
+var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 // var db = require('../mongo')
 
 var ListSchema = new mongoose.Schema({
-    title: {
-        type: String
-    },
-    index: {
-        type: Number
-    },
-    id: {
-        type: String
-    },
-    cards: [
+  lists: [
+    {
+      title: {
+        type: String,
+      },
+      index: {
+        type: Number,
+      },
+
+      cards: [
         {
-            text: {
-                type: String
-            },
-            id: {
-                type: String
-            }
-        }]
-})
+          text: {
+            type: String,
+          },
+          id: {
+            type: String,
+          },
+        },
+      ],
+      boardId: String,
+    },
+],
+  uid: String,
+});
 
-var List = mongoose.model('list', ListSchema)
+var List = mongoose.model("list", ListSchema);
 
-module.exports = List
+module.exports = List;

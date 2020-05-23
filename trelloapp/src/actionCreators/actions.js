@@ -1,54 +1,194 @@
 import axios from "axios";
 
 // Get all lists
-export function getLists() {
-  return function (dispatch) {
-    return axios.get("http://localhost:5000/list/all").then(({ data }) => {
-      // console.log(data)
-      dispatch(setList(data));
+// export function getLists() {
+//   return function (dispatch) {
+//     return axios.get("http://localhost:5000/list/all").then(({ data }) => {
+//       // console.log(data)
+//       dispatch(setList(data));
+//     });
+//   };
+// }
+
+// function setList(data) {
+//   return {
+//     type: "get_lists",
+//     payload: data,
+//   };
+// }
+// add board
+export function addBoard(boardtitle) {
+  let request = axios({
+    method: "POST",
+    url: "http://localhost:5000/board/addboard",
+    data: { boardtitle },
+    headers: {
+      "x-auth-token": window.localStorage.getItem("token"),
+    },
+  });
+  return (dispatch) => {
+    request.then((res) => {
+      // console.log(res);
+      return dispatch({
+        type: "ADD_BOARD",
+        payload: res.data,
+      });
     });
   };
 }
-
-function setList(data) {
-  return {
-    type: "get_lists",
-    payload: data,
-  };
-}
-
-// Add the title
-export function addList(title, id, index) {
+// get board 
+export function getAllBoard() {
+  var temp = window.localStorage.getItem("token");
   return function (dispatch) {
     return axios
-      .post("http://localhost:5000/list/add", { title, id, index })
+      .get("http://localhost:5000/board/all", {
+        headers: {
+          "x-auth-token": temp,
+        },
+      })
       .then(({ data }) => {
-        // console.log(data)
-        dispatch(setTitle(data));
+        // console.log(data);
+        dispatch(get(data));
       });
   };
 }
 
-export function setTitle(data) {
+function get(data) {
+  // console.log(data);
   return {
-    type: "Get_title",
+    type: "GET_BOARD",
     payload: data,
+  };
+}
+
+// get board according to id
+export function getListsById(id) {
+  var temp = window.localStorage.getItem("token");
+  return function (dispatch) {
+    return axios
+      .get(`http://localhost:5000/list/boardId/${id}`, {
+        headers: {
+          "x-auth-token": temp,
+        },
+      })
+      .then(({ data }) => {
+        // console.log(data);
+        dispatch(getById(data.data));
+      });
+  };
+}
+function getById(data) {
+  return {
+    type: "GET_BY_ID",
+    payload: data,
+  };
+}
+
+
+// Add the title
+export function addList(title, id, index, boardId, uid) {
+  let request = axios({
+    method: "POST",
+    url: "http://localhost:5000/list/add",
+    data: { title, id, index, boardId, uid },
+    headers: {
+      "x-auth-token": window.localStorage.getItem("token"),
+    },
+  });
+  return (dispatch) => {
+    request.then((res) => {
+      // console.log(res);
+      dispatch(setTitle(res.data, boardId));
+    });
+  };
+}
+ function setTitle(data,boardId) { 
+return {
+  type: "Get_title",
+  payload: {data,boardId},
+};
+  }
+
+  // edit and update the title
+export function handleEditTitle(listId, index) {
+  return {
+    type: "Edit_Title",
+    payload: { listId, index },
+  };
+}
+
+export function editTitleInput(val) {
+  return {
+    type: "Update_title",
+    payload: val,
+  };
+}
+
+export function saveTitle(boardId, listId, index, title) {
+  let data = axios.post(
+    `http://localhost:5000/list/updatetitle/${listId}`,
+    {
+      boardId,
+      title,
+      index,
+    },
+    {
+      headers: {
+        "x-auth-token": window.localStorage.getItem("token"),
+      },
+    }
+  );
+  // console.log(data);
+  return {
+    type: "Save_Update_Title",
+    payload: { boardId, listId, index, data },
+  };
+}
+
+// delete the list
+export function handleDeleteList(listId, boardId) {
+  var temp = window.localStorage.getItem("token");
+  return function (dispatch) {
+    return axios
+      .delete(`http://localhost:5000/list/delete/${listId}`, {
+        headers: {
+          "x-auth-token": temp,
+        },
+      })
+      .then(({ data }) => {
+        // console.log(data);
+        dispatch(setDeleteList(data.data, listId, boardId));
+      });
+  };
+}
+
+function setDeleteList(data, listId, boardId) {
+  return {
+    type: "Delete_List",
+    payload: { data, listId, boardId },
   };
 }
 
 //Add the card
-export function addCard(text, listId, index) {
-  return function (dispatch) {
-    return axios
-      .post(`http://localhost:5000/list/addcard`, { text, listId })
-      .then(({ data }) => {
-        // console.log(data)
-        dispatch(setCard(data.cards[data.cards.length - 1], listId, index));
-      });
+export function addCard(text, listId, index, boardId) {
+  let request = axios({
+    method: "POST",
+    url: "http://localhost:5000/list/addcard",
+    data: { text, listId, index, boardId },
+    headers: {
+      "x-auth-token": window.localStorage.getItem("token"),
+    },
+  });
+  return (dispatch) => {
+    request.then((res) => {
+      // console.log(res);
+      dispatch(setCard(res.data, listId, index, boardId));
+      //  dispatch(setCard(data.cards[data.cards.length - 1], listId, index));
+    });
   };
 }
 
-export function setCard(data, listId, index) {
+function setCard(data, listId, index) {
   return {
     type: "get_card",
     payload: { data, listId, index },
@@ -59,9 +199,14 @@ export function setCard(data, listId, index) {
 export function handleDeleteCard(listId, cardId, index) {
   return function (dispatch) {
     return axios
-      .delete(`http://localhost:5000/list/delete/${listId}/${cardId}`)
+      .delete(`http://localhost:5000/list/delete/${listId}/${cardId}`, {
+        headers: {
+          "x-auth-token": window.localStorage.getItem("token"),
+        },
+      })
+
       .then(({ data }) => {
-        // console.log(data)
+        // console.log(data);
         dispatch(deleteCard(index, listId, cardId));
       });
   };
@@ -90,12 +235,14 @@ export function editCardInput(text) {
   };
 }
 
-
-
 export function handleSubmit(listId, index, text, cardId) {
   const data = axios.post(
-    `http://localhost:5000/list/updatecard/${listId}/${cardId}`,
-    { text }
+    `http://localhost:5000/list/updatecard/${listId}/${cardId}`,{ text },{
+        headers: {
+          "x-auth-token": window.localStorage.getItem("token"),
+        },
+      },
+    
   );
   return {
     type: "Save_Update_Data",
@@ -106,49 +253,9 @@ export function handleSubmit(listId, index, text, cardId) {
     },
   };
 }
-export function handleDeleteList(listId) {
-    return function (dispatch) {
-        return axios.delete(`http://localhost:5000/list/delete/${listId}`)
-            .then(({ data }) => {
-                // console.log(data)
-                dispatch(setDeleteList(data, listId));
-            });
-    }
 
-    function setDeleteList(data,listId) {
-      return{
-        type:"Delete_List",
-        payload:{data,listId}
-      }
-    }
-  
-}
 
-// edit and update the title
-export function handleEditTitle(listId, index) {
-  return {
-    type: "Edit_Title",
-    payload: { listId, index },
-  };
-}
 
-export function editTitleInput(val) {
-  return {
-    type: "Update_title",
-    payload: val,
-  };
-}
-
-export function saveTitle(listId, index, title) {
-  let data = axios.post(`http://localhost:5000/list/updatetitle/${listId}`, {
-    title,
-    index,
-  });
-  return {
-    type: "Save_Update_Title",
-    payload: { listId, index, data },
-  };
-}
 
 // when draggable happens
 
@@ -159,17 +266,27 @@ export function sort(
   droppableIndexEnd,
   draggableId,
   type,
-  listId
+  listId,
+  boardId
 ) {
-  axios.post(`http://localhost:5000/list/dragginlist`, {
-    droppableIdStart,
-    droppableIdEnd,
-    droppableIndexStart,
-    droppableIndexEnd,
-    draggableId,
-    type,
-    listId,
-  });
+  axios.post(
+    `http://localhost:5000/list/dragginlist`,
+    {
+      droppableIdStart,
+      droppableIdEnd,
+      droppableIndexStart,
+      droppableIndexEnd,
+      draggableId,
+      type,
+      listId,
+      boardId
+    },
+    {
+      headers: {
+        "x-auth-token": window.localStorage.getItem("token"),
+      },
+    }
+  ).then(res=>console.log(res))
   return {
     type: "Draggable_Happen",
     payload: {
@@ -180,6 +297,7 @@ export function sort(
       draggableId,
       type,
       listId,
+      boardId
     },
   };
 }
