@@ -88,7 +88,7 @@ class AddActionButton extends React.Component {
       : "Add Another Card";
 
     const buttonBgColor = list ? "#dfe3e6" : boardType ? "#dfe3e6" : "inherit";
-    const buttonTextColor = list ? "white" : boardType ? "white" : "inherit";
+    const buttonTextColor = list ? "black" : boardType ? "black" : "inherit";
     const opacity = list ? 1 : 0.5;
     return (
       <div

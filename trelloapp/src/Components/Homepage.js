@@ -1,10 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link ,Redirect} from "react-router-dom";
-import { Modal, Button, Form, Alert } from "react-bootstrap";
+import { Link, Redirect } from "react-router-dom";
+import { Modal, Button, Form } from "react-bootstrap";
 import { bindActionCreators } from "redux";
 import { registerUser, loginUser } from "../actionCreators/authAction";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import '../App.css'
+
+toast.configure({
+  autoClose: 2000,
+  draggable: false,
+});
 class Homepage extends Component {
   state = {
     modal: false,
@@ -13,20 +20,50 @@ class Homepage extends Component {
     password: "",
     msg: null,
     show: false,
-    isLoggedIn: false,
     showLogin: false,
+    // isValid:true
+  };
+  componentDidUpdate = (prevProps) => {
+    const { error } = this.props;
+    if (error !== prevProps.error) {
+      if (error.id === "Register_Fail") {
+        this.setState({
+          msg: toast.error(error.msg.msg),
+        });
+      } else {
+        this.setState({
+          msg: null,
+        });
+      }
+    }
+    if (error !== prevProps.error) {
+      if (error.id === "Login_Fail") {
+        this.setState({
+          msg: toast.error(error.msg.msg),
+        });
+      } else {
+        this.setState({
+          msg: null,
+        });
+      }
+    }
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
-
     var user = {
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
     };
+    e.target.checkValidity()
+      ? this.props.registerUser(user)
+      : this.setState({
+        isValid: false
+      })
 
-    this.props.registerUser(user);
+
+
 
     this.setState({
       name: "",
@@ -42,8 +79,6 @@ class Homepage extends Component {
       email: this.state.email,
       password: this.state.password,
     };
-    //     this.props.history.push("/home");
-
     this.props.loginUser(user);
   };
 
@@ -78,22 +113,22 @@ class Homepage extends Component {
       return <Redirect to="/dashboard" />;
     }
     return (
-      <div className="register">
-        <nav class="navbar navbar-expand-md  navbar-dark sticky-top  overlay">
+      <div>
+        <nav class="navbar navbar-expand-md  navbar-color  overlay">
           <Link class="navbar-brand text-dark " to="/">
-            Trello
+            DeskaTrello
           </Link>
           <button
-            className="navbar-toggler navbar-toggler-right"
+            className="navbar-toggler navbar-toggler-right bg-info "
             type="button"
             data-toggle="collapse"
             data-target="#navb"
             aria-expanded="true"
           >
-            <span className="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon "></span>
           </button>
           <div id="navb" className="navbar-collapse collapse hide">
-            {/* <ul className="navbar-nav"></ul> */}
+
             {/* Signup model */}
             <ul className="nav navbar-nav ml-auto">
               <li className="nav-item">
@@ -106,7 +141,7 @@ class Homepage extends Component {
                     <Modal.Title>Sign Up</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    <Form>
+                    <Form onSubmit={(e) => this.handleSubmit(e)} className={"form-group mt-4 needValidation" + (this.state.isValid ? "" : " was-validated")} novalidate>
                       <Form.Group controlId="formBasicname">
                         <Form.Label>Name</Form.Label>
                         <Form.Control
@@ -115,7 +150,16 @@ class Homepage extends Component {
                           onChange={(e) =>
                             this.setState({ name: e.target.value })
                           }
+                          minlength={3}
+                          required
                         />
+
+                        <div class="invalid-feedback">
+                          Please choose a username more than 3 characters
+                        </div>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
                       </Form.Group>
                       <Form.Group controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
@@ -125,10 +169,15 @@ class Homepage extends Component {
                           onChange={(e) =>
                             this.setState({ email: e.target.value })
                           }
+                          required
                         />
+
                         <Form.Text className="text-muted">
                           We'll never share your email with anyone else.
                         </Form.Text>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
                       </Form.Group>
 
                       <Form.Group controlId="formBasicPassword">
@@ -139,14 +188,23 @@ class Homepage extends Component {
                           onChange={(e) =>
                             this.setState({ password: e.target.value })
                           }
+                          minlength={7}
+                          required
+
                         />
+                        <div class="invalid-feedback">
+                          Please enter password more than 6 characters
+                        </div>
+                        <div class="valid-feedback">
+                          Looks good!
+                        </div>
                       </Form.Group>
                       <Button
                         variant="primary"
                         className="mt-3"
                         type="submit"
                         block
-                        onClick={(e) => this.handleSubmit(e)}
+
                       >
                         Submit
                       </Button>
@@ -182,9 +240,7 @@ class Homepage extends Component {
                     <Modal.Title>Log In</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    {this.state.msg ? (
-                      <Alert variant="danger">{this.state.msg}</Alert>
-                    ) : null}
+
                     <Form>
                       <Form.Group role="form" controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
@@ -235,6 +291,12 @@ class Homepage extends Component {
             </ul>
           </div>
         </nav>
+        <div className="register">
+          <img
+            style={{ width: "100%", height: "85vh" }}
+            src={require("../image/tr.png")} alt=""
+          />
+        </div>
       </div>
     );
   }

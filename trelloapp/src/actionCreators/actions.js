@@ -1,21 +1,6 @@
 import axios from "axios";
 
-// Get all lists
-// export function getLists() {
-//   return function (dispatch) {
-//     return axios.get("http://localhost:5000/list/all").then(({ data }) => {
-//       // console.log(data)
-//       dispatch(setList(data));
-//     });
-//   };
-// }
 
-// function setList(data) {
-//   return {
-//     type: "get_lists",
-//     payload: data,
-//   };
-// }
 // add board
 export function addBoard(boardtitle) {
   let request = axios({
@@ -84,7 +69,31 @@ function getById(data) {
   };
 }
 
+//Delete board
 
+export function deleteBoard(boardId) {
+  // console.log(boardId)
+         var temp = window.localStorage.getItem("token");
+         return function (dispatch) {
+           return axios
+             .delete(`http://localhost:5000/board/delete/${boardId}`, {
+               headers: {
+                 "x-auth-token": temp,
+               },
+             })
+             .then(({ data }) => {
+              //  console.log(data); 
+               dispatch(setDeleteBoard(boardId));
+             });
+         };
+       }
+
+function setDeleteBoard(boardId){
+  return{
+    type:"DELETE_BOARD",
+    payload:boardId
+  }
+}
 // Add the title
 export function addList(title, id, index, boardId, uid) {
   let request = axios({

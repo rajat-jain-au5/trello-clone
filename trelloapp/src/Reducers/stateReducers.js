@@ -11,11 +11,12 @@ function stateReducers(state = intialState, action) {
   let stateCopy = JSON.parse(JSON.stringify(state));
   switch (action.type) {
     case "Get_title":
-      console.log(action.payload);
+      // console.log(action.payload);
+      // eslint-disable-next-line
       stateCopy.list.filter((el) => {
-        if (el.boardId == action.payload.boardId) {
+        if (el.boardId === action.payload.boardId) {
           stateCopy.list = action.payload.data.filter(
-            (el) => el.boardId == action.payload.boardId
+            (el) => el.boardId === action.payload.boardId
           );
         }
       });

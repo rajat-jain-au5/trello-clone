@@ -1,4 +1,5 @@
 import axios from "axios";
+import { returnErrors } from "./errorActions";
 
 //check token and load user
 
@@ -19,6 +20,7 @@ export const loadUser = () => (dispatch, getState) => {
       });
     })
     .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
       console.log(err);
       dispatch({
         type: "AUTH_ERROR",
@@ -43,6 +45,10 @@ export function registerUser(user) {
         });
       })
       .catch((err) => {
+        dispatch(
+          returnErrors(err.response.data, err.response.status, "Register_Fail")
+        );
+        
         dispatch({
           type: "REGISTER_FAIL",
         });
@@ -67,6 +73,9 @@ export function loginUser(user) {
         });
       })
       .catch((err) => {
+         dispatch(
+           returnErrors(err.response.data, err.response.status, "Login_Fail")
+         );
         dispatch({
           type: "LOGIN_FAIL",
         });

@@ -10,10 +10,11 @@ export default function boardReducer(state = intialState, action) {
       stateCopy.allBoard = [...stateCopy.allBoard, action.payload];
       return stateCopy;
     case "GET_BOARD":
-      console.log(action.payload)
       stateCopy.allBoard = action.payload;
-      console.log(stateCopy);
       return stateCopy;
+    case "DELETE_BOARD":
+      stateCopy.allBoard = stateCopy.allBoard.filter(el=>el._id !== action.payload)  
+      return stateCopy
     default:
       return stateCopy;
   }

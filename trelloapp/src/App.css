@@ -85,7 +85,7 @@ body{
 }
 .overlay1 {
   
-  background: rgba(154, 154, 172, 0.5); 
+  background: #1e3d59; 
   
   width: 100%;
   transition: .5s ease;
@@ -95,16 +95,39 @@ body{
  
 }
 
-.register{
-  background-image: url("image/tr.png");
-  background-position: cover;
-  background-size: cover;
-  /* background-attachment: fixed; */
-  background-repeat: no-repeat;
-  width:100%;
-  height: 100vh;
-}
 
+.navbar-color{
+  background-color: #22ACCA;
+}
 .board{
   background-color:#a8c0ff;
+  height:120px;
+  
+  border-radius: 10px;
+  display: flex;
+  flex: 1;
+
+}
+
+.boardname{
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+  margin-top: 35px;
+}
+.close{
+  float: right;
+  margin-top:5px;
+  right:5px;
+  /* top: 5px; */
+  opacity: 0
+}
+
+.board:hover .close{
+  color:black;
+  opacity: 0.8;
+} 
+.boardtitle{
+  margin-bottom: 30px;
+  font-size: 25px;
 }
