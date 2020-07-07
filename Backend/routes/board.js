@@ -7,4 +7,5 @@ router.post("/addboard", auth, boardController.addBoard);
 router.get("/all", auth, boardController.getBoard);
 
 router.get("/:id", auth, boardController.getBoardById);
+router.delete("/delete/:boardId", auth, boardController.deleteBoard);
 module.exports = router;

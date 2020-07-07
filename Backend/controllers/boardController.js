@@ -44,4 +44,16 @@ boardController.getBoardById = async (req, res) => {
     res.status(400).json({ msg: e.message, success: false });
   }
 };
+
+boardController.deleteBoard= async (req,res)=>{
+   try {
+     const userId = req.user.id;
+     const { boardId } = req.params;
+    let board = await Board.findOneAndDelete({ _id: boardId });
+    board.save()
+     res.json({ data: board });
+   } catch (err) {
+     console.log(err);
+   }
+}
 module.exports = boardController;
