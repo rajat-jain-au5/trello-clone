@@ -34,7 +34,7 @@ class List extends Component {
 
     let request = axios({
       method: "GET",
-      url: `http://localhost:5000/board/${this.props.match.params.boardId}`,
+      url: `https://trello-clone-2ff5.onrender.com/board/${this.props.match.params.boardId}`,
       headers: {
         "x-auth-token": localStorage.getItem("token"),
       },

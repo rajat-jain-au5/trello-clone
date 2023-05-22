@@ -5,7 +5,7 @@ import axios from "axios";
 export function addBoard(boardtitle) {
   let request = axios({
     method: "POST",
-    url: "http://localhost:5000/board/addboard",
+    url: "https://trello-clone-2ff5.onrender.com/board/addboard",
     data: { boardtitle },
     headers: {
       "x-auth-token": window.localStorage.getItem("token"),
@@ -26,7 +26,7 @@ export function getAllBoard() {
   var temp = window.localStorage.getItem("token");
   return function (dispatch) {
     return axios
-      .get("http://localhost:5000/board/all", {
+      .get("https://trello-clone-2ff5.onrender.com/board/all", {
         headers: {
           "x-auth-token": temp,
         },
@@ -51,7 +51,7 @@ export function getListsById(id) {
   var temp = window.localStorage.getItem("token");
   return function (dispatch) {
     return axios
-      .get(`http://localhost:5000/list/boardId/${id}`, {
+      .get(`https://trello-clone-2ff5.onrender.com/list/boardId/${id}`, {
         headers: {
           "x-auth-token": temp,
         },
@@ -76,7 +76,7 @@ export function deleteBoard(boardId) {
          var temp = window.localStorage.getItem("token");
          return function (dispatch) {
            return axios
-             .delete(`http://localhost:5000/board/delete/${boardId}`, {
+             .delete(`https://trello-clone-2ff5.onrender.com/board/delete/${boardId}`, {
                headers: {
                  "x-auth-token": temp,
                },
@@ -98,7 +98,7 @@ function setDeleteBoard(boardId){
 export function addList(title, id, index, boardId, uid) {
   let request = axios({
     method: "POST",
-    url: "http://localhost:5000/list/add",
+    url: "https://trello-clone-2ff5.onrender.com/list/add",
     data: { title, id, index, boardId, uid },
     headers: {
       "x-auth-token": window.localStorage.getItem("token"),
@@ -135,7 +135,7 @@ export function editTitleInput(val) {
 
 export function saveTitle(boardId, listId, index, title) {
   let data = axios.post(
-    `http://localhost:5000/list/updatetitle/${listId}`,
+    `https://trello-clone-2ff5.onrender.com/list/updatetitle/${listId}`,
     {
       boardId,
       title,
@@ -159,7 +159,7 @@ export function handleDeleteList(listId, boardId) {
   var temp = window.localStorage.getItem("token");
   return function (dispatch) {
     return axios
-      .delete(`http://localhost:5000/list/delete/${listId}`, {
+      .delete(`https://trello-clone-2ff5.onrender.com/list/delete/${listId}`, {
         headers: {
           "x-auth-token": temp,
         },
@@ -182,7 +182,7 @@ function setDeleteList(data, listId, boardId) {
 export function addCard(text, listId, index, boardId) {
   let request = axios({
     method: "POST",
-    url: "http://localhost:5000/list/addcard",
+    url: "https://trello-clone-2ff5.onrender.com/list/addcard",
     data: { text, listId, index, boardId },
     headers: {
       "x-auth-token": window.localStorage.getItem("token"),
@@ -208,7 +208,7 @@ function setCard(data, listId, index) {
 export function handleDeleteCard(listId, cardId, index) {
   return function (dispatch) {
     return axios
-      .delete(`http://localhost:5000/list/delete/${listId}/${cardId}`, {
+      .delete(`https://trello-clone-2ff5.onrender.com/list/delete/${listId}/${cardId}`, {
         headers: {
           "x-auth-token": window.localStorage.getItem("token"),
         },
@@ -246,7 +246,7 @@ export function editCardInput(text) {
 
 export function handleSubmit(listId, index, text, cardId) {
   const data = axios.post(
-    `http://localhost:5000/list/updatecard/${listId}/${cardId}`,{ text },{
+    `https://trello-clone-2ff5.onrender.com/list/updatecard/${listId}/${cardId}`,{ text },{
         headers: {
           "x-auth-token": window.localStorage.getItem("token"),
         },
@@ -279,7 +279,7 @@ export function sort(
   boardId
 ) {
   axios.post(
-    `http://localhost:5000/list/dragginlist`,
+    `https://trello-clone-2ff5.onrender.com/list/dragginlist`,
     {
       droppableIdStart,
       droppableIdEnd,

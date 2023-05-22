@@ -10,7 +10,7 @@ export const loadUser = () => (dispatch, getState) => {
   //get token
 
   axios
-    .get("http://localhost:5000/user", tokenConfig(getState))
+    .get("https://trello-clone-2ff5.onrender.com/user", tokenConfig(getState))
 
     .then((res) => {
       //     console.log(res)
@@ -32,7 +32,7 @@ export function registerUser(user) {
   console.log(user);
   let request = axios({
     method: "POST",
-    url: "http://localhost:5000/register",
+    url: "https://trello-clone-2ff5.onrender.com/register",
     data: user,
   });
   return (dispatch) => {
@@ -59,7 +59,7 @@ export function registerUser(user) {
 export function loginUser(user) {
   let request = axios({
     method: "POST",
-    url: "http://localhost:5000/login",
+    url: "https://trello-clone-2ff5.onrender.com/login",
     data: user,
   });
   return (dispatch) => {
